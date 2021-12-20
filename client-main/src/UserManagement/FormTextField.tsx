@@ -1,5 +1,5 @@
-import { StandardTextFieldProps, TextField, TextFieldProps } from "@material-ui/core";
-import { RefObject, useEffect, useRef, useState } from "react";
+import { StandardTextFieldProps, TextField } from "@material-ui/core";
+import { RefObject, useState } from "react";
 
 interface FormTextFieldProps extends StandardTextFieldProps {
     inputRef: RefObject<HTMLInputElement>;
