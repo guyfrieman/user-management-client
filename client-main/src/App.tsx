@@ -1,5 +1,5 @@
 import './App.css';
-import {UserManagement} from './UserManagement/UserManagement'
+import {UserManagement} from './UserManagement/UserManagement';
 function App() {
   return <UserManagement/>
 }

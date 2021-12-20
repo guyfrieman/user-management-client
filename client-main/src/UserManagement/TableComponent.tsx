@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-const generateItems = (amount:number) => {
-    const arr = Array.from(Array(amount))
-    return arr.map((number, i) => ({
-      id: i,
-      firstName: `First Name ${i + 1}`,
-      lastName: `Last Name ${i + 1}`,
-      email: `Email ${i + 1}`,
-      password: `Password ${i + 1}`,
-      description: `Description ${i + 1}`,
-    }))
-  }
-export const TableComponent:React.FC = () => {
-    const [rows, setRows] = useState(generateItems(50))
+import { User } from './UserManagement';
+interface UsersTableProps {
+  isLoading: boolean;
+  isError: boolean;
+  users?: User[];
+}
+
+export const TableComponent:React.FC<UsersTableProps> = ({isLoading, isError, users}) => {
+    
+    if(isLoading){
+        <div>Loading...</div>;
+    } else if(isError){
+        return <div>Error</div>;
+    } else if(!users || users.length === 0){
+      return <div>No users</div>;
+    }
     return (
       <TableContainer>
         <Table stickyHeader>
@@ -26,8 +29,8 @@ export const TableComponent:React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map(({ id, firstName, lastName, email, password, description }) => (
-              <TableRow key={id}>
+            {users?.map(({ _id, firstName, lastName, email, password, description }) => (
+              <TableRow key={_id}>
                 <TableCell>{firstName}</TableCell>
                 <TableCell>{lastName}</TableCell>
                 <TableCell>{email}</TableCell>
