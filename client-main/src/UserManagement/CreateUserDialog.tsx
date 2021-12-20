@@ -19,7 +19,6 @@ interface CreateUserDialogProps{
 }
 async function createUser(user: CreateUserRequest) {
     const response = await axios.post('http://localhost:4000/createUser', user);
-    console.log(response);
     return response.data;
 } 
 export const CreateUserDialog:React.FC<CreateUserDialogProps> = ({open, onClose, users}) => {
@@ -29,7 +28,16 @@ export const CreateUserDialog:React.FC<CreateUserDialogProps> = ({open, onClose,
     const passwordRef = useRef<HTMLInputElement>(null);
     const descriptionRef = useRef<HTMLInputElement>(null);
     const [emailAlreadyExist, setEmailAlreadyExist] = useState(false);
-    const onCloseSnack = () => setEmailAlreadyExist(false);
+    const onCloseDialog = (event: React.SyntheticEvent, reason?: string) => {
+        if(reason === 'backdropClick'){
+            return;
+        }
+        setEmailAlreadyExist(false);
+        onClose();
+    };
+    const onCloseSnack = (event: React.SyntheticEvent, reason?: string) => {
+        setEmailAlreadyExist(false);
+    };
     const {isError, mutate} = useMutation<User, any, CreateUserRequest>(createUser);
     
     const onSubmitDialod = () => {
@@ -57,11 +65,12 @@ export const CreateUserDialog:React.FC<CreateUserDialogProps> = ({open, onClose,
     
         onClose();
     };
-    return (<Dialog open={open} onClose={onClose}>
+    return (<Dialog open={open} onClose={onCloseDialog}>
         <DialogTitle>Create new user</DialogTitle>
         <Snackbar 
          anchorOrigin={{vertical: 'top', horizontal: 'center'}} 
-         open={emailAlreadyExist} 
+         open={emailAlreadyExist}
+         autoHideDuration={6000}
          onClick={onCloseSnack}
          message='Email already exist.' />
         <DialogContent>
@@ -109,7 +118,7 @@ export const CreateUserDialog:React.FC<CreateUserDialogProps> = ({open, onClose,
             />
         </DialogContent>
         <DialogActions>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={onCloseDialog}>Cancel</Button>
             <Button onClick={onSubmitDialod}>Submit</Button>
         </DialogActions>
     </Dialog>)
